@@ -1,0 +1,1887 @@
+<div class="pt-page">
+<style>
+  /* ============ Base ============ */
+  .pt-page {
+    padding: 0; max-width: 100%; overflow-x: hidden; width: 100%;
+    background: #ffffff; color: #000000;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+  }
+  .pt-page * { color: #000000; }
+  .pt-page-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; flex-wrap: wrap; gap: 15px;
+    border-bottom: 2px solid #000; padding-bottom: 14px;
+  }
+  .pt-page-header h1 { margin: 0; font-size: 24px; color: #000; font-weight: 900; }
+  .pt-page-header p { margin: 4px 0 0 0; color: #333; font-size: 13px; font-weight: 700; }
+
+  .pt-page-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  /* ============ Buttons (B&W) ============ */
+  .pt-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px;
+    border: 2px solid #000; border-radius: 8px;
+    font-size: 14px; font-weight: 800;
+    cursor: pointer; transition: all 0.15s ease;
+    font-family: 'Cairo', sans-serif; white-space: nowrap;
+    background: #ffffff; color: #000000;
+  }
+  .pt-btn:hover { background: #000000; color: #ffffff; }
+  .pt-btn:hover * { color: #ffffff; }
+  .pt-btn:active { transform: translateY(1px); }
+  .pt-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .pt-btn-primary,
+  .pt-btn-info,
+  .pt-btn-secondary,
+  .pt-btn-danger,
+  .pt-btn-success,
+  .pt-btn-audit {
+    background: #ffffff; color: #000000; border: 2px solid #000;
+  }
+  .pt-btn-primary:hover,
+  .pt-btn-info:hover,
+  .pt-btn-secondary:hover,
+  .pt-btn-danger:hover,
+  .pt-btn-success:hover,
+  .pt-btn-audit:hover { background: #000; color: #fff; }
+
+  .pt-btn-icon {
+    width: 34px; height: 34px; padding: 0; justify-content: center;
+    border-radius: 6px; font-size: 14px;
+  }
+  .pt-btn-whatsapp { background: #fff; color: #000; border: 2px solid #000; }
+  .pt-btn-whatsapp:hover { background: #000; color: #fff; }
+
+  /* ============ Stats ============ */
+  .pt-stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px; margin-bottom: 20px;
+  }
+  .pt-stat-card {
+    padding: 14px 10px; border-radius: 8px;
+    border: 2px solid #000; background: #ffffff;
+    cursor: pointer; text-align: center; transition: all 0.15s;
+  }
+  .pt-stat-card:hover { background: #f2f2f2; }
+  .pt-stat-card.active { background: #000000; }
+  .pt-stat-card.active * { color: #ffffff; }
+  .pt-stat-icon { font-size: 22px; margin-bottom: 4px; }
+  .pt-stat-label { font-size: 11px; font-weight: 800; }
+  .pt-stat-value { font-size: 20px; font-weight: 900; margin-top: 4px; word-break: break-word; }
+
+  /* ============ Layout ============ */
+  .pt-layout { display: grid; grid-template-columns: 240px 1fr; gap: 16px; align-items: start; }
+
+  /* ============ Sidebar ============ */
+  .pt-sidebar {
+    background: #ffffff; border: 2px solid #000; border-radius: 8px;
+    overflow: hidden; position: sticky; top: 20px;
+  }
+  .pt-sidebar-header {
+    padding: 12px 14px; background: #000000; color: #ffffff;
+    font-size: 13px; font-weight: 900;
+  }
+  .pt-sidebar-item {
+    padding: 10px 14px; display: flex; align-items: center; gap: 8px;
+    cursor: pointer; transition: all 0.15s;
+    font-size: 13px; font-weight: 800; color: #000;
+    border-bottom: 1px solid #000;
+    border-right: 4px solid transparent;
+  }
+  .pt-sidebar-item:last-child { border-bottom: none; }
+  .pt-sidebar-item:hover { background: #f2f2f2; }
+  .pt-sidebar-item.active {
+    background: #000000; color: #ffffff;
+    border-right-color: #000;
+  }
+  .pt-sidebar-item.active * { color: #ffffff; }
+  .pt-sidebar-item .icon { font-size: 17px; }
+  .pt-sidebar-item .count {
+    margin-right: auto; background: #ffffff; color: #000;
+    padding: 2px 8px; border-radius: 10px; font-size: 11px;
+    font-weight: 900; border: 1px solid #000;
+  }
+  .pt-sidebar-item.active .count { background: #ffffff; color: #000; }
+
+  /* ============ Main Panel ============ */
+  .pt-main {
+    background: #ffffff; border: 2px solid #000; border-radius: 8px;
+    overflow: hidden; width: 100%;
+  }
+  .pt-main-header {
+    padding: 14px 16px; border-bottom: 2px solid #000;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px; background: #ffffff;
+  }
+  .pt-main-title {
+    margin: 0; font-size: 17px; font-weight: 900;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pt-main-title .icon { font-size: 20px; }
+  .pt-main-title .subtitle { font-size: 12px; font-weight: 700; color: #555; margin-right: 6px; }
+  .pt-main-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .pt-toolbar {
+    padding: 10px 16px; border-bottom: 2px solid #000; background: #ffffff;
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  .pt-toolbar input, .pt-toolbar select {
+    padding: 8px 12px; border: 2px solid #000; border-radius: 6px;
+    font-size: 13px; font-family: 'Cairo', sans-serif; font-weight: 700;
+    background: #ffffff; color: #000;
+  }
+  .pt-toolbar input:focus, .pt-toolbar select:focus {
+    outline: none; background: #f2f2f2;
+  }
+  .pt-toolbar input { flex: 1; min-width: 200px; }
+
+  /* ============ Table ============ */
+  .pt-table-wrapper { background: #ffffff; width: 100%; }
+  .pt-table-scroll {
+    overflow-x: auto; overflow-y: auto; max-height: 65vh;
+    -webkit-overflow-scrolling: touch; width: 100%; position: relative;
+  }
+  .pt-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+  .pt-table thead tr { background: #000000; }
+  .pt-table thead th {
+    position: sticky; top: 0; z-index: 30;
+    background: #000000; color: #ffffff;
+    padding: 10px 8px; font-weight: 900; font-size: 12px;
+    text-align: right; white-space: nowrap;
+    border-bottom: 2px solid #000;
+    border-left: 1px solid #333;
+  }
+  .pt-table thead th:last-child { border-left: none; }
+
+  .pt-table th.col-num     { width: 50px;  text-align: center; }
+  .pt-table th.col-name    { width: auto;  min-width: 150px; }
+  .pt-table th.col-type    { width: 130px; }
+  .pt-table th.col-phone   { width: 130px; }
+  .pt-table th.col-address { width: auto;  min-width: 150px; }
+  .pt-table th.col-actions { width: 130px; text-align: center; }
+
+  .pt-table td {
+    padding: 8px; border-bottom: 1px solid #000;
+    border-left: 1px solid #000;
+    font-size: 12px; font-weight: 700; color: #000;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    background: #ffffff;
+  }
+  .pt-table td:last-child { border-left: none; }
+  .pt-table tbody tr:hover td { background: #f2f2f2; }
+
+  .pt-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; background: #000 !important; color: #fff !important;
+    font-weight: 900; margin-left: 8px; vertical-align: middle; flex-shrink: 0;
+    border: 2px solid #000;
+  }
+  .pt-name-cell { display: flex; align-items: center; gap: 8px; }
+  .pt-name-text { font-weight: 900; color: #000; }
+  .pt-badge {
+    display: inline-block; padding: 3px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 900;
+    background: #ffffff !important; color: #000 !important;
+    border: 1px solid #000;
+  }
+  .pt-actions-cell { display: flex; gap: 4px; justify-content: center; }
+  .pt-actions-cell .pt-btn-icon { width: 28px; height: 28px; font-size: 12px; }
+  .pt-empty { padding: 40px 20px; text-align: center; color: #000; font-weight: 800; }
+  .pt-empty .icon { font-size: 48px; opacity: 0.4; margin-bottom: 15px; }
+
+  /* ============ Card View ============ */
+  .pt-cards-container { display: none; padding: 10px; gap: 12px; flex-direction: column; }
+  .pt-card {
+    background: #ffffff; border: 2px solid #000; border-radius: 8px;
+    padding: 14px;
+  }
+  .pt-card-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid #000;
+  }
+  .pt-card-name {
+    font-size: 15px; font-weight: 900; margin: 0; flex: 1;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .pt-card-name .pt-avatar { width: 40px; height: 40px; font-size: 16px; }
+  .pt-card-body { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .pt-card-field { display: flex; flex-direction: column; gap: 2px; }
+  .pt-card-label { font-size: 11px; font-weight: 900; color: #000; }
+  .pt-card-value { font-size: 13px; font-weight: 800; color: #000; word-break: break-word; }
+  .pt-card-actions {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+    padding-top: 12px; border-top: 2px solid #000;
+  }
+  .pt-card-actions .pt-btn {
+    justify-content: center; padding: 8px 4px; font-size: 12px;
+  }
+
+  /* ============ Modal ============ */
+  .pt-modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.6); z-index: 9999;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .pt-modal-overlay.active { display: flex; }
+  .pt-modal {
+    background: #ffffff; border-radius: 10px; width: 100%; max-width: 750px;
+    max-height: 92vh; overflow: hidden; display: flex; flex-direction: column;
+    border: 3px solid #000; box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    animation: ptModalIn 0.25s ease;
+  }
+  @keyframes ptModalIn {
+    from { opacity: 0; transform: scale(0.96) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .pt-modal-header {
+    padding: 16px 20px; display: flex; justify-content: space-between;
+    align-items: center; background: #000000 !important; color: #ffffff;
+    flex-shrink: 0; border-bottom: 3px solid #000;
+  }
+  .pt-modal-header h3 { margin: 0; font-size: 17px; font-weight: 900; color: #fff; }
+  .pt-modal-close {
+    background: #ffffff; border: 2px solid #000; color: #000;
+    width: 32px; height: 32px; border-radius: 6px; cursor: pointer;
+    font-size: 15px; font-weight: 900; flex-shrink: 0;
+  }
+  .pt-modal-close:hover { background: #000; color: #fff; border-color: #fff; }
+  .pt-modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+  .pt-modal-footer {
+    padding: 14px 20px; background: #ffffff; border-top: 2px solid #000;
+    display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0; flex-wrap: wrap;
+  }
+
+  /* ============ View-Only Mode ============ */
+  .pt-modal.view-only .pt-form-input,
+  .pt-modal.view-only .pt-form-input:read-only,
+  .pt-modal.view-only .pt-form-input:disabled {
+    background: #f2f2f2; color: #000; cursor: not-allowed; border-color: #555;
+  }
+  .pt-modal.view-only textarea.pt-form-input { background: #f2f2f2; }
+  .pt-modal.view-only .pt-type-option { pointer-events: none; opacity: 0.6; }
+
+  .pt-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .pt-form-group { margin-bottom: 16px; }
+  .pt-form-label {
+    display: block; margin-bottom: 6px; font-weight: 900;
+    font-size: 13px; color: #000;
+  }
+  .pt-form-input {
+    width: 100%; padding: 10px 14px; border: 2px solid #000; border-radius: 6px;
+    font-size: 14px; font-family: 'Cairo', sans-serif; font-weight: 700;
+    background: #ffffff; color: #000;
+  }
+  .pt-form-input:focus { outline: none; background: #f2f2f2; }
+  .pt-form-input[readonly] { background: #f2f2f2; cursor: not-allowed; }
+  .pt-required { color: #000; margin-right: 2px; font-weight: 900; }
+
+  .pt-type-selector {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px; margin-top: 8px;
+  }
+  .pt-type-option {
+    padding: 10px; border: 2px solid #000; border-radius: 6px;
+    cursor: pointer; text-align: center; transition: all 0.15s;
+    font-size: 12px; font-weight: 800; color: #000; background: #ffffff;
+  }
+  .pt-type-option:hover { background: #f2f2f2; }
+  .pt-type-option.selected { background: #000000; color: #ffffff; }
+  .pt-type-option.selected * { color: #ffffff; }
+  .pt-type-option .icon { font-size: 20px; display: block; margin-bottom: 4px; }
+  .pt-type-option .code { font-size: 10px; color: #555; font-weight: 700; }
+
+  /* ============ Shipping Section ============ */
+  .pt-section {
+    border: 2px dashed #000; border-radius: 8px;
+    padding: 16px; margin-bottom: 16px; background: #fafafa;
+  }
+  .pt-section-header {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 900; color: #000;
+    margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 2px solid #000;
+  }
+  .pt-section-header .icon { font-size: 20px; }
+  .pt-section-header .optional-badge {
+    background: #000; color: #fff; padding: 2px 8px;
+    border-radius: 4px; font-size: 10px; font-weight: 900;
+    margin-right: auto;
+  }
+
+  .pt-location-box {
+    border: 2px solid #000; border-radius: 6px;
+    padding: 12px; background: #ffffff;
+  }
+  .pt-location-input {
+    width: 100%; padding: 10px 14px;
+    border: 2px solid #000; border-radius: 6px;
+    font-size: 13px; font-family: 'Cairo', sans-serif; font-weight: 700;
+    background: #ffffff; color: #000;
+    resize: vertical; min-height: 60px;
+  }
+  .pt-location-actions {
+    display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;
+  }
+  .pt-location-actions .pt-btn {
+    padding: 8px 14px; font-size: 12px;
+  }
+  .pt-location-result {
+    margin-top: 12px; padding: 12px;
+    background: #f2f2f2; border: 1px solid #000; border-radius: 6px;
+    font-size: 12px; font-weight: 800;
+  }
+  .pt-location-result .row {
+    display: flex; justify-content: space-between;
+    margin-bottom: 6px; gap: 10px;
+  }
+  .pt-location-result .row:last-child { margin-bottom: 0; }
+  .pt-location-result .label { color: #555; }
+  .pt-location-result .value { font-family: monospace; font-weight: 900; color: #000; }
+
+  .pt-location-buttons {
+    display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .pt-location-buttons .pt-btn {
+    flex: 1; justify-content: center; padding: 10px 8px;
+    font-size: 13px; min-width: 120px;
+  }
+  .pt-btn-uber {
+    background: #000 !important; color: #fff !important;
+    border: 2px solid #000 !important;
+  }
+  .pt-btn-uber * { color: #fff !important; }
+  .pt-btn-uber:hover {
+    background: #333 !important; color: #fff !important;
+  }
+
+  /* ============ Audit Modal ============ */
+  .pt-audit-overlay {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65);
+    z-index: 99999; display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .pt-audit-overlay.show { display: flex; }
+  .pt-audit-modal {
+    background: #ffffff; border-radius: 10px; width: 100%; max-width: 900px;
+    max-height: 88vh; display: flex; flex-direction: column;
+    border: 3px solid #000; overflow: hidden;
+  }
+  .pt-audit-header {
+    background: #000000 !important; color: #ffffff;
+    padding: 14px 18px; display: flex; justify-content: space-between;
+    align-items: center; flex-shrink: 0; gap: 12px;
+  }
+  .pt-audit-header h3 {
+    font-size: 16px; font-weight: 900; margin: 0;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: #fff;
+  }
+  .pt-audit-header .filters-badge {
+    background: #ffffff; color: #000; padding: 3px 10px;
+    border-radius: 4px; font-size: 12px; font-weight: 900;
+  }
+  .pt-audit-header .close-btn {
+    width: 32px; height: 32px; background: #ffffff; border: 2px solid #000;
+    border-radius: 6px; color: #000; font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: inherit; font-weight: 900;
+  }
+  .pt-audit-header .close-btn:hover { background: #333; color: #fff; border-color: #fff; }
+  .pt-audit-body { flex: 1; overflow-y: auto; padding: 16px; background: #ffffff; }
+  .pt-audit-loading { text-align: center; padding: 40px 20px; color: #000; font-weight: 800; font-size: 14px; }
+  .pt-audit-empty { text-align: center; padding: 60px 20px; color: #000; }
+  .pt-audit-empty .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.6; }
+  .pt-audit-empty h4 { color: #000; font-size: 16px; margin-bottom: 6px; font-weight: 900; }
+  .pt-audit-empty p { font-size: 13px; font-weight: 700; }
+  .pt-audit-card {
+    background: #ffffff; border: 2px solid #000; border-radius: 6px;
+    margin-bottom: 12px; overflow: hidden;
+  }
+  .pt-audit-card-header {
+    padding: 10px 14px; background: #f2f2f2; display: flex;
+    justify-content: space-between; align-items: center; gap: 10px;
+    border-bottom: 2px solid #000; flex-wrap: wrap;
+  }
+  .pt-audit-action {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 4px; font-size: 12px;
+    font-weight: 900; background: #ffffff; color: #000; border: 2px solid #000;
+  }
+  .pt-audit-meta {
+    display: flex; gap: 12px; font-size: 11px; color: #000;
+    font-weight: 800; flex-wrap: wrap;
+  }
+  .pt-audit-meta span { display: inline-flex; align-items: center; gap: 4px; }
+  .pt-audit-meta .user { color: #000; font-weight: 900; }
+  .pt-audit-meta .time { font-family: monospace; font-size: 12px; color: #000; font-weight: 900; }
+  .pt-audit-meta .ip { font-family: monospace; color: #000; }
+  .pt-audit-meta .invoice-tag {
+    background: #ffffff; color: #000; padding: 2px 8px; border-radius: 4px;
+    font-family: monospace; font-size: 11px; font-weight: 900; border: 1px solid #000;
+  }
+  .pt-audit-card-body { padding: 12px 14px; }
+  .pt-audit-notes {
+    padding: 8px 12px; background: #f2f2f2; border: 1px solid #000;
+    border-radius: 4px; font-size: 12px; color: #000;
+    font-weight: 800; margin-bottom: 10px;
+  }
+  .pt-audit-diff-section {
+    margin-bottom: 12px; background: #ffffff; border: 2px solid #000;
+    border-radius: 6px; overflow: hidden;
+  }
+  .pt-audit-diff-title {
+    background: #000000; color: #ffffff; padding: 8px 12px;
+    font-size: 12px; font-weight: 900; display: flex; align-items: center; gap: 6px;
+  }
+  .pt-audit-diff-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .pt-audit-diff-table thead { background: #f2f2f2; }
+  .pt-audit-diff-table thead th {
+    padding: 7px 10px; text-align: right; font-size: 11px; font-weight: 900;
+    color: #000; border-bottom: 2px solid #000; border-left: 1px solid #000;
+  }
+  .pt-audit-diff-table thead th:last-child { border-left: none; }
+  .pt-audit-diff-table thead th:nth-child(2),
+  .pt-audit-diff-table thead th:nth-child(3) { text-align: center; width: 30%; }
+  .pt-audit-diff-table tbody td {
+    padding: 7px 10px; border-bottom: 1px solid #000;
+    border-left: 1px solid #000; vertical-align: middle; color: #000;
+  }
+  .pt-audit-diff-table tbody td:last-child { border-left: none; }
+  .pt-audit-diff-table tbody tr:last-child td { border-bottom: none; }
+  .pt-audit-diff-field {
+    font-weight: 900; color: #000; font-size: 11px;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .pt-audit-diff-old, .pt-audit-diff-new {
+    text-align: center; font-family: 'Consolas', monospace;
+    font-size: 12px; color: #000; word-break: break-word; font-weight: 800;
+  }
+  .pt-audit-diff-table tr.diff-changed { background: #f2f2f2; }
+  .pt-audit-diff-table tr.diff-changed .pt-audit-diff-old { text-decoration: line-through; opacity: 0.6; }
+  .pt-audit-diff-table tr.diff-changed .pt-audit-diff-new { font-weight: 900; }
+  .pt-audit-diff-table tr.diff-added { background: #f2f2f2; }
+  .pt-audit-diff-table tr.diff-removed { background: #f2f2f2; }
+  .pt-diff-badge {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    font-size: 9px; font-weight: 900; background: #000; color: #fff;
+  }
+  .pt-diff-na { color: #666; font-style: italic; }
+  .pt-audit-footer {
+    padding: 10px 18px; background: #ffffff; border-top: 2px solid #000;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: #000; font-weight: 900; flex-shrink: 0;
+  }
+  .pt-audit-footer .count-badge {
+    background: #000; color: #fff; padding: 3px 12px;
+    border-radius: 10px; font-weight: 900; font-size: 12px;
+  }
+  .pt-audit-info-box {
+    background: #f2f2f2; border: 1px solid #000; border-radius: 4px;
+    padding: 10px 12px; font-size: 12px; color: #000;
+    margin-bottom: 8px; font-weight: 800;
+  }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 1024px) {
+    .pt-layout { grid-template-columns: 1fr; }
+    .pt-sidebar {
+      position: static; display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0;
+    }
+    .pt-sidebar-header { grid-column: 1 / -1; }
+    .pt-sidebar-item {
+      border-right: none; border-bottom: 1px solid #000;
+      justify-content: center; flex-direction: column;
+      gap: 4px; padding: 10px 6px; text-align: center;
+    }
+    .pt-sidebar-item.active { border-bottom-color: #000; }
+    .pt-sidebar-item .count { margin-right: 0; margin-top: 4px; }
+  }
+
+  @media (max-width: 768px) {
+    .pt-page-header { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
+    .pt-page-header h1 { font-size: 20px !important; }
+    .pt-page-actions { width: 100%; }
+    .pt-page-actions .pt-btn { flex: 1; justify-content: center; padding: 10px 12px; font-size: 13px; }
+
+    .pt-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .pt-stat-card { padding: 10px 6px; }
+    .pt-stat-icon { font-size: 18px; margin-bottom: 2px; }
+    .pt-stat-label { font-size: 10px; }
+    .pt-stat-value { font-size: 17px; margin-top: 2px; }
+
+    .pt-sidebar { grid-template-columns: repeat(3, 1fr); }
+    .pt-sidebar-header { font-size: 12px; padding: 10px 12px; }
+    .pt-sidebar-item { padding: 8px 4px; font-size: 11px; gap: 2px; }
+    .pt-sidebar-item .icon { font-size: 15px; }
+    .pt-sidebar-item .count { font-size: 10px; padding: 1px 6px; }
+
+    .pt-main-header { padding: 12px 14px; flex-direction: column; align-items: stretch; gap: 10px; }
+    .pt-main-title { font-size: 15px; }
+    .pt-main-actions { width: 100%; }
+    .pt-main-actions .pt-btn { flex: 1; justify-content: center; }
+
+    .pt-toolbar { padding: 10px 12px; gap: 8px; }
+    .pt-toolbar input { min-width: 0; width: 100%; flex: 1 1 100%; }
+    .pt-toolbar select { flex: 1; }
+
+    .pt-table-wrapper { display: none; }
+    .pt-cards-container { display: flex; }
+
+    .pt-modal-overlay { padding: 0; align-items: flex-end; }
+    .pt-modal {
+      max-width: 100%; max-height: 95vh; border-radius: 12px 12px 0 0;
+      animation: ptModalInMobile 0.25s ease;
+    }
+    @keyframes ptModalInMobile {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .pt-modal-header { padding: 14px 16px; }
+    .pt-modal-header h3 { font-size: 15px; }
+    .pt-modal-body { padding: 14px; }
+    .pt-modal-footer { padding: 12px 14px; }
+    .pt-modal-footer .pt-btn { flex: 1; justify-content: center; }
+
+    .pt-form-row { grid-template-columns: 1fr; gap: 12px; }
+    .pt-type-selector { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .pt-type-option { padding: 8px 6px; font-size: 11px; }
+    .pt-type-option .icon { font-size: 18px; }
+
+    .pt-audit-modal { max-height: 92vh; border-radius: 8px; }
+
+    .pt-card-actions { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .pt-card-actions .pt-btn { padding: 8px 2px; font-size: 11px; gap: 4px; }
+
+    .pt-location-buttons .pt-btn { min-width: 100%; }
+  }
+
+  @media (max-width: 480px) {
+    .pt-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .pt-stat-card { padding: 8px 6px; }
+    .pt-stat-icon { font-size: 16px; }
+    .pt-stat-label { font-size: 9px; }
+    .pt-stat-value { font-size: 15px; }
+
+    .pt-sidebar { grid-template-columns: repeat(2, 1fr); }
+    .pt-sidebar-item { font-size: 10px; padding: 8px 4px; }
+    .pt-sidebar-item .icon { font-size: 14px; }
+    .pt-sidebar-item .count { font-size: 9px; }
+
+    .pt-card { padding: 12px; }
+    .pt-card-name { font-size: 14px; }
+    .pt-type-selector { grid-template-columns: 1fr 1fr; }
+    .pt-type-option { padding: 6px 4px; font-size: 10px; }
+    .pt-type-option .icon { font-size: 16px; }
+    .pt-type-option .code { display: none; }
+  }
+</style>
+
+<div class="pt-page-header">
+  <div>
+    <h1>🏢 إدارة الأطراف والحسابات</h1>
+    <p>العملاء، الموردين، المخازن، البنوك، الخزائن، والحسابات العامة</p>
+  </div>
+  <div class="pt-page-actions">
+    <button class="pt-btn pt-btn-audit" onclick="window.partnersPage.showAudit()">
+      <span>📜</span><span>سجل التعديلات</span>
+    </button>
+    <button class="pt-btn pt-btn-info" onclick="window.partnersPage.refresh()">
+      <span>🔄</span><span>تحديث</span>
+    </button>
+  </div>
+</div>
+
+<div class="pt-stats-grid" id="ptStatsGrid">
+  <div class="pt-stat-card" data-type="all" onclick="window.partnersPage.filterByType('all')">
+    <div class="pt-stat-icon">🏢</div>
+    <div class="pt-stat-label">الإجمالي</div>
+    <div class="pt-stat-value" id="statAll">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="1" onclick="window.partnersPage.filterByType('1')">
+    <div class="pt-stat-icon">👤</div>
+    <div class="pt-stat-label">عملاء</div>
+    <div class="pt-stat-value" id="statCustomers">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="2" onclick="window.partnersPage.filterByType('2')">
+    <div class="pt-stat-icon">🏭</div>
+    <div class="pt-stat-label">موردين</div>
+    <div class="pt-stat-value" id="statSuppliers">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="3" onclick="window.partnersPage.filterByType('3')">
+    <div class="pt-stat-icon">📦</div>
+    <div class="pt-stat-label">مخازن خامات</div>
+    <div class="pt-stat-value" id="statRawStores">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="6" onclick="window.partnersPage.filterByType('6')">
+    <div class="pt-stat-icon">🏪</div>
+    <div class="pt-stat-label">مخازن منتج</div>
+    <div class="pt-stat-value" id="statProductStores">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="7" onclick="window.partnersPage.filterByType('7')">
+    <div class="pt-stat-icon">💰</div>
+    <div class="pt-stat-label">الخزينة</div>
+    <div class="pt-stat-value" id="statSafes">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="5" onclick="window.partnersPage.filterByType('5')">
+    <div class="pt-stat-icon">🏦</div>
+    <div class="pt-stat-label">حسابات بنكية</div>
+    <div class="pt-stat-value" id="statBanks">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="4" onclick="window.partnersPage.filterByType('4')">
+    <div class="pt-stat-icon">👷</div>
+    <div class="pt-stat-label">موظفين</div>
+    <div class="pt-stat-value" id="statEmployees">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="8" onclick="window.partnersPage.filterByType('8')">
+    <div class="pt-stat-icon">💸</div>
+    <div class="pt-stat-label">مصروفات</div>
+    <div class="pt-stat-value" id="statExpenses">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="9" onclick="window.partnersPage.filterByType('9')">
+    <div class="pt-stat-icon">🤝</div>
+    <div class="pt-stat-label">شركاء</div>
+    <div class="pt-stat-value" id="statPartners">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="10" onclick="window.partnersPage.filterByType('10')">
+    <div class="pt-stat-icon">📈</div>
+    <div class="pt-stat-label">بنود دخل أخرى</div>
+    <div class="pt-stat-value" id="statIncomes">0</div>
+  </div>
+  <div class="pt-stat-card" data-type="11" onclick="window.partnersPage.filterByType('11')">
+    <div class="pt-stat-icon">🏢</div>
+    <div class="pt-stat-label">أصول ثابتة</div>
+    <div class="pt-stat-value" id="statAssets">0</div>
+  </div>
+</div>
+
+<div class="pt-layout">
+  <div class="pt-sidebar">
+    <div class="pt-sidebar-header">📂 التصنيفات</div>
+    <div class="pt-sidebar-item active" data-type="all" onclick="window.partnersPage.filterByType('all')">
+      <span class="icon">🏢</span><span>الكل</span><span class="count" id="cntAll">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="1" onclick="window.partnersPage.filterByType('1')">
+      <span class="icon">👤</span><span>عملاء</span><span class="count" id="cnt1">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="2" onclick="window.partnersPage.filterByType('2')">
+      <span class="icon">🏭</span><span>موردين</span><span class="count" id="cnt2">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="3" onclick="window.partnersPage.filterByType('3')">
+      <span class="icon">📦</span><span>مخازن خامات</span><span class="count" id="cnt3">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="6" onclick="window.partnersPage.filterByType('6')">
+      <span class="icon">🏪</span><span>مخازن منتج</span><span class="count" id="cnt6">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="7" onclick="window.partnersPage.filterByType('7')">
+      <span class="icon">💰</span><span>الخزينة</span><span class="count" id="cnt7">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="5" onclick="window.partnersPage.filterByType('5')">
+      <span class="icon">🏦</span><span>حسابات بنكية</span><span class="count" id="cnt5">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="4" onclick="window.partnersPage.filterByType('4')">
+      <span class="icon">👷</span><span>موظفين</span><span class="count" id="cnt4">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="8" onclick="window.partnersPage.filterByType('8')">
+      <span class="icon">💸</span><span>مصروفات</span><span class="count" id="cnt8">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="9" onclick="window.partnersPage.filterByType('9')">
+      <span class="icon">🤝</span><span>شركاء</span><span class="count" id="cnt9">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="10" onclick="window.partnersPage.filterByType('10')">
+      <span class="icon">📈</span><span>بنود دخل أخرى</span><span class="count" id="cnt10">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="11" onclick="window.partnersPage.filterByType('11')">
+      <span class="icon">🏢</span><span>أصول ثابتة</span><span class="count" id="cnt11">0</span>
+    </div>
+    <div class="pt-sidebar-item" data-type="12" onclick="window.partnersPage.filterByType('12')">
+      <span class="icon">📊</span><span>رصيد أول المدة</span><span class="count" id="cnt12">0</span>
+    </div>
+  </div>
+
+  <div class="pt-main">
+    <div class="pt-main-header">
+      <h2 class="pt-main-title">
+        <span class="icon" id="ptMainIcon">🏢</span>
+        <span id="ptMainTitle">كل الأطراف</span>
+        <span class="subtitle" id="ptMainSubtitle"></span>
+      </h2>
+      <div class="pt-main-actions">
+        <button class="pt-btn pt-btn-primary" onclick="window.partnersPage.openModal()">
+          <span>➕</span><span>إضافة جديد</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="pt-toolbar">
+      <input type="text" id="ptSearchInput" oninput="window.partnersPage.filter()" placeholder="🔍 ابحث بالاسم أو التليفون أو العنوان...">
+      <select id="ptSortFilter" onchange="window.partnersPage.filter()">
+        <option value="name">الاسم (أ - ي)</option>
+        <option value="name_desc">الاسم (ي - أ)</option>
+        <option value="created_desc">الأحدث</option>
+        <option value="created_asc">الأقدم</option>
+      </select>
+      <button class="pt-btn pt-btn-secondary pt-btn-icon" onclick="window.partnersPage.clearFilters()" title="مسح الفلاتر">🧹</button>
+    </div>
+
+    <div class="pt-table-wrapper">
+      <div class="pt-table-scroll">
+        <table class="pt-table" id="ptTable">
+          <thead>
+            <tr id="ptTableHead">
+              <th class="col-num">#</th>
+              <th class="col-name">الاسم</th>
+              <th class="col-type">النوع</th>
+              <th class="col-phone">التليفون</th>
+              <th class="col-address">العنوان</th>
+              <th class="col-actions">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="ptTableBody">
+            <tr><td colspan="6" class="pt-empty">⏳ جاري التحميل...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="pt-cards-container" id="ptCardsContainer"></div>
+  </div>
+</div>
+
+<div class="pt-modal-overlay" id="ptModal">
+  <div class="pt-modal" data-mode="edit">
+    <div class="pt-modal-header" id="ptModalHeader">
+      <h3 id="ptModalTitle">➕ إضافة جديد</h3>
+      <button class="pt-modal-close" onclick="window.partnersPage.closeModal()">✕</button>
+    </div>
+    <div class="pt-modal-body">
+      <form id="ptForm" onsubmit="return false;">
+        <input type="hidden" id="ptId">
+        <input type="hidden" id="ptVendcode">
+
+        <!-- البيانات الأساسية -->
+        <div class="pt-form-group" id="ptTypeGroup">
+          <label class="pt-form-label">النوع <span class="pt-required">*</span></label>
+          <div class="pt-type-selector" id="ptTypeSelector"></div>
+        </div>
+
+        <div class="pt-form-group">
+          <label class="pt-form-label">الاسم <span class="pt-required">*</span></label>
+          <input type="text" id="ptName" required class="pt-form-input" placeholder="الاسم الكامل">
+        </div>
+
+        <div class="pt-form-row">
+          <div class="pt-form-group">
+            <label class="pt-form-label">التليفون</label>
+            <input type="text" id="ptPhone" class="pt-form-input" placeholder="01xxxxxxxxx">
+          </div>
+          <div class="pt-form-group">
+            <label class="pt-form-label">العنوان</label>
+            <input type="text" id="ptAddress" class="pt-form-input" placeholder="المدينة، الحي...">
+          </div>
+        </div>
+
+        <div class="pt-form-group">
+          <label class="pt-form-label">ملاحظات</label>
+          <textarea id="ptNotes" rows="2" class="pt-form-input" style="resize:vertical;"></textarea>
+        </div>
+
+        <!-- قسم بيانات الشحن (اختياري) -->
+        <div class="pt-section" id="ptShippingSection">
+          <div class="pt-section-header">
+            <span class="icon">🚚</span>
+            <span>بيانات الشحن</span>
+            <span class="optional-badge">اختياري</span>
+          </div>
+
+          <div class="pt-form-row">
+            <div class="pt-form-group">
+              <label class="pt-form-label">شركة الشحن</label>
+              <input type="text" id="ptShippingCompany" class="pt-form-input" placeholder="أرامكس، أوبر، بوسطة...">
+            </div>
+            <div class="pt-form-group">
+              <label class="pt-form-label">البلد</label>
+              <input type="text" id="ptShippingCountry" class="pt-form-input" placeholder="مصر">
+            </div>
+          </div>
+
+          <div class="pt-form-row">
+            <div class="pt-form-group">
+              <label class="pt-form-label">المدينة</label>
+              <input type="text" id="ptShippingCity" class="pt-form-input" placeholder="القاهرة">
+            </div>
+            <div class="pt-form-group">
+              <label class="pt-form-label">اسم المستلم</label>
+              <input type="text" id="ptRecipientName" class="pt-form-input" placeholder="اتركه فاضي لو نفسه اسم العميل">
+            </div>
+          </div>
+
+          <div class="pt-form-row">
+            <div class="pt-form-group">
+              <label class="pt-form-label">تليفون المستلم</label>
+              <input type="text" id="ptRecipientPhone" class="pt-form-input" placeholder="اتركه فاضي لو نفسه تليفون العميل">
+            </div>
+            <div class="pt-form-group">
+              <label class="pt-form-label">العنوان التفصيلي</label>
+              <input type="text" id="ptShippingAddress" class="pt-form-input" placeholder="الشارع، المبنى، الشقة...">
+            </div>
+          </div>
+
+          <!-- اللوكيشن -->
+          <div class="pt-form-group">
+            <label class="pt-form-label">📍 اللوكيشن (الصق اللي وصلك من واتساب)</label>
+            <div class="pt-location-box">
+              <textarea id="ptLocationRaw" class="pt-location-input" placeholder="مثال:&#10;https://maps.app.goo.gl/2PB9UJo54KjFuuc56&#10;أو: 30.044389, 31.235694&#10;أو: 592V+RGP, Al Sharikat, Berket an Nasr..."></textarea>
+              <div class="pt-location-actions">
+                <button type="button" class="pt-btn pt-btn-primary" onclick="window.partnersPage.parseLocation()">
+                  <span>🔍</span><span>تحليل اللوكيشن</span>
+                </button>
+                <button type="button" class="pt-btn pt-btn-secondary" onclick="window.partnersPage.pasteFromClipboard()">
+                  <span>📋</span><span>لصق من الحافظة</span>
+                </button>
+                <button type="button" class="pt-btn pt-btn-secondary" onclick="window.partnersPage.clearLocation()">
+                  <span>🧹</span><span>مسح</span>
+                </button>
+              </div>
+
+              <div class="pt-location-result" id="ptLocationResult" style="display:none;">
+                <div class="row">
+                  <span class="label">📌 الإحداثيات:</span>
+                  <span class="value" id="ptLocationCoords">—</span>
+                </div>
+                <div class="pt-location-buttons">
+                  <button type="button" class="pt-btn pt-btn-uber" id="ptUberBtn" onclick="window.partnersPage.openUber()">
+                    <span>🚕</span><span>اطلب أوبر</span>
+                  </button>
+                  <button type="button" class="pt-btn" onclick="window.partnersPage.openGoogleMaps()">
+                    <span>🗺️</span><span>عرض الخريطة</span>
+                  </button>
+                  <button type="button" class="pt-btn" onclick="window.partnersPage.copyCoordinates()">
+                    <span>📋</span><span>نسخ الإحداثيات</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-form-group">
+            <label class="pt-form-label">ملاحظات الشحن</label>
+            <input type="text" id="ptShippingNotes" class="pt-form-input" placeholder="أي ملاحظات إضافية">
+          </div>
+        </div>
+
+        <!-- Hidden fields for location coords -->
+        <input type="hidden" id="ptLocationLat">
+        <input type="hidden" id="ptLocationLng">
+        <input type="hidden" id="ptUberUrl">
+
+        <!-- معلومات إضافية (وضع العرض) -->
+        <div class="pt-form-group" id="ptExtraInfo" style="display:none;">
+          <label class="pt-form-label">معلومات إضافية</label>
+          <div style="padding:12px; background:#f2f2f2; border:1px solid #000; border-radius:6px; font-size:12px; color:#000; font-weight:800;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span>الكود:</span>
+              <span style="font-family:monospace; font-weight:900; color:#000;" id="ptInfoCode">-</span>
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+              <span>تاريخ الإضافة:</span>
+              <span style="font-weight:900; color:#000;" id="ptInfoDate">-</span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="pt-modal-footer">
+      <div id="ptContactBtns" style="display:none; gap:8px; margin-right:auto;">
+        <button class="pt-btn" id="ptCallBtn" onclick="window.partnersPage.callFromModal()"><span>📞</span><span>اتصال</span></button>
+        <button class="pt-btn" id="ptWhatsAppBtn" onclick="window.partnersPage.whatsappFromModal()"><span>💬</span><span>واتساب</span></button>
+      </div>
+      <button class="pt-btn pt-btn-secondary" onclick="window.partnersPage.closeModal()">❌ إغلاق</button>
+      <button class="pt-btn pt-btn-primary" id="ptEnableEditBtn" onclick="window.partnersPage.enableEditMode()" style="display:none;"><span>✏️</span><span>تعديل</span></button>
+      <button class="pt-btn pt-btn-danger" id="ptDeleteFromModalBtn" onclick="window.partnersPage.deleteFromModal()" style="display:none;"><span>🗑️</span><span>حذف</span></button>
+      <button class="pt-btn pt-btn-primary" id="ptSaveBtn" onclick="window.partnersPage.save()">
+        <span>💾</span><span>حفظ</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="pt-audit-overlay" id="ptAuditOverlay" onclick="window.partnersPage.closeAudit(event)">
+  <div class="pt-audit-modal" onclick="event.stopPropagation()">
+    <div class="pt-audit-header">
+      <h3>
+        <span>📜 سجل تعديلات الأطراف</span>
+        <span class="filters-badge" id="ptAuditFilters">—</span>
+      </h3>
+      <button class="close-btn" onclick="window.partnersPage.closeAudit()">✕</button>
+    </div>
+    <div class="pt-audit-body" id="ptAuditBody">
+      <div class="pt-audit-loading">⏳ جاري التحميل...</div>
+    </div>
+    <div class="pt-audit-footer">
+      <span>إجمالي التعديلات:</span>
+      <span class="count-badge" id="ptAuditCount">0</span>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+(function() {
+  'use strict';
+
+  var API_BASE = window.API_BASE || 'http://localhost:3000';
+  console.log('🚀 [Partners] init | API_BASE:', API_BASE);
+
+  var TYPES = {
+    '1':  { label: 'عميل',           icon: '👤', plural: 'عملاء' },
+    '2':  { label: 'مورد',           icon: '🏭', plural: 'موردين' },
+    '3':  { label: 'مخزن خامات',    icon: '📦', plural: 'مخازن خامات' },
+    '4':  { label: 'موظف',           icon: '👷', plural: 'موظفين' },
+    '5':  { label: 'حساب بنكي',      icon: '🏦', plural: 'حسابات بنكية' },
+    '6':  { label: 'مخزن منتج',      icon: '🏪', plural: 'مخازن منتج' },
+    '7':  { label: 'خزينة',          icon: '💰', plural: 'الخزائن' },
+    '8':  { label: 'مصروف',          icon: '💸', plural: 'مصروفات' },
+    '9':  { label: 'شريك',           icon: '🤝', plural: 'شركاء' },
+    '10': { label: 'بند دخل',        icon: '📈', plural: 'بنود دخل أخرى' },
+    '11': { label: 'أصل ثابت',       icon: '🏢', plural: 'أصول ثابتة' },
+    '12': { label: 'رصيد أول المدة', icon: '📊', plural: 'رصيد أول المدة' }
+  };
+
+  var state = {
+    allPartners: [],
+    filteredPartners: [],
+    stats: {},
+    currentType: 'all',
+    currentSort: 'name',
+    currentSearch: '',
+    mode: 'edit',
+    parsedLocation: null
+  };
+
+  function formatNumber(num) {
+    if (num === null || num === undefined || num === '') return '0';
+    return Number(num).toLocaleString('en-US');
+  }
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+  }
+
+  function showToast(msg, type) {
+    if (typeof window.showToast === 'function') return window.showToast(msg, type);
+    alert((type === 'error' ? '❌ ' : type === 'success' ? '✅ ' : 'ℹ️ ') + msg);
+  }
+
+  function getTypeInfo(vendcode) {
+    return TYPES[String(vendcode)] || { label: 'غير معروف', icon: '❓', plural: 'أخرى' };
+  }
+
+  function getInitials(name) {
+    if (!name) return '?';
+    var parts = String(name).trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0);
+    return parts[0].charAt(0) + (parts[1] ? parts[1].charAt(0) : '');
+  }
+
+  function formatDate(d) {
+    if (!d) return '-';
+    try {
+      var date = new Date(d);
+      if (isNaN(date.getTime())) return d;
+      var y = date.getFullYear();
+      var m = String(date.getMonth() + 1).padStart(2, '0');
+      var day = String(date.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + day;
+    } catch (e) { return d; }
+  }
+
+  // ============================================================
+  // 📞 Phone & WhatsApp helpers
+  // ============================================================
+  function cleanPhone(phone) {
+    if (!phone) return '';
+    return String(phone).replace(/[\s\-\(\)\+]/g, '');
+  }
+
+  function formatWhatsAppNumber(phone) {
+    var cleaned = cleanPhone(phone);
+    if (!cleaned || !/^\d+$/.test(cleaned)) return null;
+    if (cleaned.indexOf('00') === 0) cleaned = cleaned.substring(2);
+    if (cleaned.indexOf('0') === 0) return '20' + cleaned.substring(1);
+    if (cleaned.indexOf('20') === 0) return cleaned;
+    return cleaned;
+  }
+
+  function callPhone(phone) {
+    var cleaned = cleanPhone(phone);
+    if (!cleaned) { showToast('⚠️ لا يوجد رقم تليفون', 'warning'); return; }
+    window.location.href = 'tel:' + cleaned;
+  }
+
+  function openWhatsApp(phone, name) {
+    if (!phone) { showToast('⚠️ لا يوجد رقم تليفون', 'warning'); return; }
+    var waNumber = formatWhatsAppNumber(phone);
+    if (!waNumber) { showToast('❌ رقم غير صالح للواتساب', 'error'); return; }
+    var url = 'https://wa.me/' + waNumber;
+    window.open(url, '_blank');
+  }
+
+  function callFromModal() {
+    callPhone(document.getElementById('ptPhone').value);
+  }
+
+  function whatsappFromModal() {
+    openWhatsApp(document.getElementById('ptPhone').value, document.getElementById('ptName').value);
+  }
+
+  function handleCall(btn) {
+    callPhone(btn.getAttribute('data-phone'));
+  }
+  function handleWhatsApp(btn) {
+    openWhatsApp(btn.getAttribute('data-phone'), btn.getAttribute('data-name'));
+  }
+
+  async function api(endpoint, data) {
+    try {
+      var res = await fetch(API_BASE + '/api/partners/' + endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(data || {})
+      });
+      if (!res.ok) return { success: false, error: 'HTTP ' + res.status };
+      return await res.json();
+    } catch (e) {
+      console.error('❌ API error:', endpoint, e);
+      return { success: false, error: e.message };
+    }
+  }
+
+  async function shippingApi(endpoint, data) {
+    try {
+      var res = await fetch(API_BASE + '/api/shipping/' + endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(data || {})
+      });
+      if (!res.ok) return { success: false, error: 'HTTP ' + res.status };
+      return await res.json();
+    } catch (e) {
+      console.error('❌ Shipping API error:', endpoint, e);
+      return { success: false, error: e.message };
+    }
+  }
+
+  // ============================================================
+  // Load
+  // ============================================================
+  async function loadAll() {
+    var tbody = document.getElementById('ptTableBody');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="6" class="pt-empty">⏳ جاري التحميل...</td></tr>';
+
+    var results = await Promise.all([
+      api('getPartners', { limit: 10000 }),
+      api('getPartnerStats', {})
+    ]);
+    var partnersRes = results[0], statsRes = results[1];
+
+    if (!partnersRes.success) {
+      showToast('❌ فشل التحميل: ' + (partnersRes.error || ''), 'error');
+      if (tbody) tbody.innerHTML = '<tr><td colspan="6" class="pt-empty">❌ فشل تحميل البيانات</td></tr>';
+      return;
+    }
+
+    state.allPartners = partnersRes.data.partners || [];
+    state.stats = statsRes.success ? statsRes.data : {};
+
+    console.log('✅ تم تحميل ' + state.allPartners.length + ' طرف');
+    updateStats();
+    applyFilters();
+  }
+
+  function updateStats() {
+    var byType = state.stats.by_type || [];
+    var map = { all: state.stats.total || state.allPartners.length };
+    byType.forEach(function(t) { map[t.vendcode] = t.count; });
+
+    var ids = ['All', 'Customers', 'Suppliers', 'RawStores', 'ProductStores', 'Safes', 'Banks', 'Employees', 'Expenses', 'Partners', 'Incomes', 'Assets'];
+    var keys = ['all', '1', '2', '3', '6', '7', '5', '4', '8', '9', '10', '11'];
+
+    ids.forEach(function(id, i) {
+      var el = document.getElementById('stat' + id);
+      if (el) el.textContent = formatNumber(map[keys[i]] || 0);
+    });
+
+    var cntAll = document.getElementById('cntAll');
+    if (cntAll) cntAll.textContent = formatNumber(map.all || 0);
+
+    Object.keys(TYPES).forEach(function(code) {
+      var el = document.getElementById('cnt' + code);
+      if (el) el.textContent = formatNumber(map[code] || 0);
+    });
+  }
+
+  function filterByType(type) {
+    state.currentType = type;
+    document.querySelectorAll('.pt-sidebar-item').forEach(function(item) {
+      item.classList.toggle('active', item.dataset.type === String(type));
+    });
+    document.querySelectorAll('.pt-stat-card').forEach(function(card) {
+      card.classList.toggle('active', card.dataset.type === String(type));
+    });
+    updateMainHeader();
+    applyFilters();
+  }
+
+  function updateMainHeader() {
+    var titleEl = document.getElementById('ptMainTitle');
+    var iconEl = document.getElementById('ptMainIcon');
+    var subtitleEl = document.getElementById('ptMainSubtitle');
+
+    if (state.currentType === 'all') {
+      if (titleEl) titleEl.textContent = 'كل الأطراف';
+      if (iconEl) iconEl.textContent = '🏢';
+      if (subtitleEl) subtitleEl.textContent = '(جميع الأنواع)';
+    } else {
+      var info = getTypeInfo(state.currentType);
+      if (titleEl) titleEl.textContent = info.plural;
+      if (iconEl) iconEl.textContent = info.icon;
+      if (subtitleEl) subtitleEl.textContent = '';
+    }
+  }
+
+  function applyFilters() {
+    var search = state.currentSearch;
+    var sort = state.currentSort;
+
+    var filtered = state.allPartners.filter(function(p) {
+      if (state.currentType !== 'all' && String(p.vendcode) !== String(state.currentType)) return false;
+      if (search) {
+        var s = search.toLowerCase();
+        return (p.name || '').toLowerCase().indexOf(s) !== -1 ||
+               (p.phone || '').toLowerCase().indexOf(s) !== -1 ||
+               (p.addres || '').toLowerCase().indexOf(s) !== -1;
+      }
+      return true;
+    });
+
+    filtered.sort(function(a, b) {
+      var aName = (a.name || '').toLowerCase();
+      var bName = (b.name || '').toLowerCase();
+      switch (sort) {
+        case 'name_desc': return bName.localeCompare(aName, 'ar');
+        case 'created_desc': return (b.day || '').localeCompare(a.day || '');
+        case 'created_asc': return (a.day || '').localeCompare(b.day || '');
+        case 'name':
+        default: return aName.localeCompare(bName, 'ar');
+      }
+    });
+
+    state.filteredPartners = filtered;
+    renderTable();
+    renderCards();
+  }
+
+  function renderTable() {
+    var tbody = document.getElementById('ptTableBody');
+    if (!tbody) return;
+
+    var items = state.filteredPartners;
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="pt-empty"><div class="icon">📂</div><div>لا توجد بيانات</div></td></tr>';
+      return;
+    }
+
+    var html = '';
+    items.forEach(function(item, index) {
+      var info = getTypeInfo(item.vendcode);
+      var initials = getInitials(item.name);
+      var phone = item.phone || '';
+
+      html += '<tr>' +
+        '<td class="col-num" style="text-align:center;">' + (index + 1) + '</td>' +
+        '<td class="col-name">' +
+          '<div class="pt-name-cell">' +
+            '<div class="pt-avatar">' + escapeHtml(initials) + '</div>' +
+            '<div class="pt-name-text">' + escapeHtml(item.name || '') + '</div>' +
+          '</div>' +
+        '</td>' +
+        '<td class="col-type">' +
+          '<span class="pt-badge">' + info.icon + ' ' + info.label + '</span>' +
+        '</td>' +
+        '<td class="col-phone" style="font-family:monospace;">' + (escapeHtml(phone) || '-') + '</td>' +
+        '<td class="col-address">' + (escapeHtml(item.addres) || '-') + '</td>' +
+        '<td class="col-actions">' +
+          '<div class="pt-actions-cell">' +
+            '<button class="pt-btn pt-btn-icon" onclick="window.partnersPage.view(\'' + item.id + '\')" title="مشاهدة">👁️</button>' +
+            (phone ?
+              '<button class="pt-btn pt-btn-icon" data-phone="' + escapeHtml(phone) + '" onclick="window.partnersPage.handleCall(this)" title="اتصال">📞</button>' +
+              '<button class="pt-btn pt-btn-icon" data-phone="' + escapeHtml(phone) + '" data-name="' + escapeHtml(item.name || '') + '" onclick="window.partnersPage.handleWhatsApp(this)" title="واتساب">💬</button>'
+              : '') +
+          '</div>' +
+        '</td>' +
+      '</tr>';
+    });
+    tbody.innerHTML = html;
+  }
+
+  function renderCards() {
+    var container = document.getElementById('ptCardsContainer');
+    if (!container) return;
+
+    var items = state.filteredPartners;
+    if (!items.length) {
+      container.innerHTML = '<div class="pt-empty"><div class="icon">📂</div><div>لا توجد بيانات</div></div>';
+      return;
+    }
+
+    var html = '';
+    items.forEach(function(item) {
+      var info = getTypeInfo(item.vendcode);
+      var initials = getInitials(item.name);
+      var phone = item.phone || '';
+
+      html += '<div class="pt-card">' +
+        '<div class="pt-card-header">' +
+          '<div class="pt-card-name">' +
+            '<div class="pt-avatar">' + escapeHtml(initials) + '</div>' +
+            '<span>' + escapeHtml(item.name || '') + '</span>' +
+          '</div>' +
+          '<span class="pt-badge">' + info.icon + ' ' + info.label + '</span>' +
+        '</div>' +
+        '<div class="pt-card-body">' +
+          '<div class="pt-card-field"><span class="pt-card-label">📞 التليفون</span><span class="pt-card-value">' + (escapeHtml(phone) || '-') + '</span></div>' +
+          '<div class="pt-card-field"><span class="pt-card-label">📍 العنوان</span><span class="pt-card-value">' + (escapeHtml(item.addres) || '-') + '</span></div>' +
+        '</div>' +
+        '<div class="pt-card-actions">' +
+          '<button class="pt-btn" onclick="window.partnersPage.view(\'' + item.id + '\')"><span>👁️</span><span>مشاهدة</span></button>' +
+          (phone ?
+            '<button class="pt-btn" data-phone="' + escapeHtml(phone) + '" onclick="window.partnersPage.handleCall(this)"><span>📞</span><span>اتصال</span></button>' +
+            '<button class="pt-btn" data-phone="' + escapeHtml(phone) + '" data-name="' + escapeHtml(item.name || '') + '" onclick="window.partnersPage.handleWhatsApp(this)"><span>💬</span><span>واتساب</span></button>'
+            : '') +
+        '</div>' +
+      '</div>';
+    });
+    container.innerHTML = html;
+  }
+
+  function filter() {
+    state.currentSearch = (document.getElementById('ptSearchInput') || {}).value || '';
+    state.currentSort = (document.getElementById('ptSortFilter') || {}).value || 'name';
+    applyFilters();
+  }
+
+  function clearFilters() {
+    document.getElementById('ptSearchInput').value = '';
+    document.getElementById('ptSortFilter').value = 'name';
+    state.currentSearch = '';
+    state.currentSort = 'name';
+    applyFilters();
+  }
+
+  // ============================================================
+  // Modal
+  // ============================================================
+  function renderTypeSelector() {
+    var container = document.getElementById('ptTypeSelector');
+    if (!container) return;
+    var html = '';
+    Object.keys(TYPES).forEach(function(code) {
+      var info = TYPES[code];
+      html += '<div class="pt-type-option" data-type="' + code + '" onclick="window.partnersPage.selectType(\'' + code + '\')">' +
+        '<span class="icon">' + info.icon + '</span>' +
+        '<div>' + info.label + '</div>' +
+      '</div>';
+    });
+    container.innerHTML = html;
+  }
+
+  function selectType(code) {
+    if (state.mode === 'view') return;
+    document.getElementById('ptVendcode').value = code;
+    document.querySelectorAll('.pt-type-option').forEach(function(opt) {
+      opt.classList.toggle('selected', opt.dataset.type === String(code));
+    });
+  }
+
+  function hideContactButtons() {
+    var btns = document.getElementById('ptContactBtns');
+    if (btns) btns.style.display = 'none';
+  }
+
+  function showContactButtons() {
+    var btns = document.getElementById('ptContactBtns');
+    if (btns) {
+      var phone = document.getElementById('ptPhone').value;
+      btns.style.display = phone ? 'flex' : 'none';
+    }
+  }
+
+  function resetShippingFields() {
+    document.getElementById('ptShippingCompany').value = '';
+    document.getElementById('ptShippingCountry').value = '';
+    document.getElementById('ptShippingCity').value = '';
+    document.getElementById('ptShippingAddress').value = '';
+    document.getElementById('ptRecipientName').value = '';
+    document.getElementById('ptRecipientPhone').value = '';
+    document.getElementById('ptShippingNotes').value = '';
+    document.getElementById('ptLocationRaw').value = '';
+    document.getElementById('ptLocationLat').value = '';
+    document.getElementById('ptLocationLng').value = '';
+    document.getElementById('ptUberUrl').value = '';
+    document.getElementById('ptLocationResult').style.display = 'none';
+    state.parsedLocation = null;
+  }
+
+  function openModal() {
+    state.mode = 'edit';
+    document.getElementById('ptModal').dataset.mode = 'edit';
+    document.querySelector('#ptModal .pt-modal').classList.remove('view-only');
+
+    document.getElementById('ptForm').reset();
+    document.getElementById('ptId').value = '';
+    document.getElementById('ptVendcode').value = '';
+    document.getElementById('ptExtraInfo').style.display = 'none';
+    document.getElementById('ptTypeGroup').style.display = 'block';
+    document.getElementById('ptModalTitle').textContent = '➕ إضافة جديد';
+
+    document.getElementById('ptSaveBtn').style.display = 'inline-flex';
+    document.getElementById('ptEnableEditBtn').style.display = 'none';
+    document.getElementById('ptDeleteFromModalBtn').style.display = 'none';
+    hideContactButtons();
+
+    resetShippingFields();
+    renderTypeSelector();
+    if (state.currentType !== 'all') {
+      selectType(state.currentType);
+    } else {
+      selectType('1');
+    }
+    document.getElementById('ptModal').classList.add('active');
+    setTimeout(function() { document.getElementById('ptName').focus(); }, 100);
+  }
+
+  function closeModal() {
+    document.getElementById('ptModal').classList.remove('active');
+    document.querySelector('#ptModal .pt-modal').classList.remove('view-only');
+    document.getElementById('ptModal').dataset.mode = 'edit';
+    state.mode = 'edit';
+    hideContactButtons();
+    if (typeof returnToPreviousPage === 'function' && returnToPreviousPage()) return;
+  }
+
+  async function edit(id) {
+    var item = state.allPartners.find(function(p) { return p.id === id; });
+    if (!item) { showToast('❌ العنصر غير موجود', 'error'); return; }
+
+    var info = getTypeInfo(item.vendcode);
+
+    document.getElementById('ptId').value = item.id;
+    document.getElementById('ptVendcode').value = item.vendcode || '1';
+    document.getElementById('ptName').value = item.name || '';
+    document.getElementById('ptPhone').value = item.phone || '';
+    document.getElementById('ptAddress').value = item.addres || '';
+    document.getElementById('ptNotes').value = item.notes || '';
+
+    document.getElementById('ptTypeGroup').style.display = 'none';
+    document.getElementById('ptExtraInfo').style.display = 'block';
+    document.getElementById('ptInfoCode').textContent = item.id || '-';
+    document.getElementById('ptInfoDate').textContent = formatDate(item.day);
+
+    // ✅ تحميل بيانات الشحن
+    resetShippingFields();
+    var shippingRes = await api('getPartner', { id: id });
+    if (shippingRes.success && shippingRes.data && shippingRes.data.shipping) {
+      var s = shippingRes.data.shipping;
+      document.getElementById('ptShippingCompany').value = s.shipping_company || '';
+      document.getElementById('ptShippingCountry').value = s.country || '';
+      document.getElementById('ptShippingCity').value = s.city || '';
+      document.getElementById('ptShippingAddress').value = s.address || '';
+      document.getElementById('ptRecipientName').value = s.recipient_name || '';
+      document.getElementById('ptRecipientPhone').value = s.recipient_phone || '';
+      document.getElementById('ptShippingNotes').value = s.notes || '';
+      document.getElementById('ptLocationRaw').value = s.location_raw || '';
+
+      if (s.location_lat && s.location_lng) {
+        var lat = parseFloat(s.location_lat);
+        var lng = parseFloat(s.location_lng);
+        document.getElementById('ptLocationLat').value = lat;
+        document.getElementById('ptLocationLng').value = lng;
+        document.getElementById('ptLocationCoords').textContent = lat + ', ' + lng;
+        document.getElementById('ptLocationResult').style.display = 'block';
+
+        var uberUrl = 'https://m.uber.com/ul/?action=setPickup&dropoff[latitude]=' + lat + '&dropoff[longitude]=' + lng;
+        document.getElementById('ptUberUrl').value = uberUrl;
+        state.parsedLocation = { lat: lat, lng: lng, uber: uberUrl };
+      }
+    }
+
+    document.getElementById('ptModalTitle').textContent = '✏️ ' + info.label + ': ' + (item.name || '');
+    document.getElementById('ptModal').classList.add('active');
+  }
+
+  // ============================================================
+  // View Mode
+  // ============================================================
+  function view(id) {
+    state.mode = 'view';
+    document.getElementById('ptModal').dataset.mode = 'view';
+    document.querySelector('#ptModal .pt-modal').classList.add('view-only');
+
+    edit(id);
+    applyViewMode();
+  }
+
+  function applyViewMode() {
+    var modal = document.querySelector('#ptModal .pt-modal');
+    if (!modal) return;
+
+    modal.querySelectorAll('input, textarea').forEach(function(f) {
+      if (f.type === 'hidden') return;
+      if (f.closest('.pt-modal-footer')) return;
+      f.disabled = true;
+    });
+
+    document.getElementById('ptSaveBtn').style.display = 'none';
+    document.getElementById('ptEnableEditBtn').style.display = 'inline-flex';
+    document.getElementById('ptDeleteFromModalBtn').style.display = 'inline-flex';
+    showContactButtons();
+  }
+
+  function enableEditMode() {
+    if (!confirm('⚠️ تحذير: سيتم تحويل العنصر لوضع التعديل.\n\nأي تعديل هيتسجل باسمك.\n\nهل أنت متأكد؟')) return;
+    state.mode = 'edit';
+    document.getElementById('ptModal').dataset.mode = 'edit';
+    document.querySelector('#ptModal .pt-modal').classList.remove('view-only');
+
+    var modal = document.querySelector('#ptModal .pt-modal');
+    modal.querySelectorAll('input, textarea').forEach(function(f) {
+      if (f.type === 'hidden') return;
+      if (f.closest('.pt-modal-footer')) return;
+      f.disabled = false;
+    });
+
+    document.getElementById('ptSaveBtn').style.display = 'inline-flex';
+    document.getElementById('ptEnableEditBtn').style.display = 'none';
+    document.getElementById('ptDeleteFromModalBtn').style.display = 'none';
+    hideContactButtons();
+
+    showToast('✅ تم تفعيل وضع التعديل', 'info');
+  }
+
+  // ============================================================
+  // Location Parsing
+  // ============================================================
+  async function parseLocation() {
+    var raw = document.getElementById('ptLocationRaw').value.trim();
+    if (!raw) {
+      showToast('⚠️ الصق الرابط أو الإحداثيات أولاً', 'warning');
+      return;
+    }
+
+    showToast('🔍 جاري التحليل...', 'info');
+
+    var recipientName = document.getElementById('ptName').value || '';
+    var res = await shippingApi('parseLocation', {
+      text: raw,
+      recipient_name: recipientName
+    });
+
+    if (!res.success) {
+      showToast('❌ ' + (res.error || 'فشل التحليل'), 'error');
+      document.getElementById('ptLocationResult').style.display = 'none';
+      state.parsedLocation = null;
+      return;
+    }
+
+    document.getElementById('ptLocationLat').value = res.lat;
+    document.getElementById('ptLocationLng').value = res.lng;
+    document.getElementById('ptLocationCoords').textContent = res.lat + ', ' + res.lng;
+    document.getElementById('ptLocationResult').style.display = 'block';
+    document.getElementById('ptUberUrl').value = res.uber;
+
+    state.parsedLocation = res;
+
+    showToast('✅ تم استخراج الإحداثيات', 'success');
+  }
+
+  async function pasteFromClipboard() {
+    try {
+      var text = await navigator.clipboard.readText();
+      if (!text) {
+        showToast('⚠️ الحافظة فاضية', 'warning');
+        return;
+      }
+      document.getElementById('ptLocationRaw').value = text;
+      showToast('✅ تم اللصق — جاري التحليل...', 'info');
+      await parseLocation();
+    } catch (e) {
+      showToast('❌ مش قادر أقرأ من الحافظة: ' + e.message, 'error');
+    }
+  }
+
+  function clearLocation() {
+    document.getElementById('ptLocationRaw').value = '';
+    document.getElementById('ptLocationLat').value = '';
+    document.getElementById('ptLocationLng').value = '';
+    document.getElementById('ptUberUrl').value = '';
+    document.getElementById('ptLocationResult').style.display = 'none';
+    state.parsedLocation = null;
+    showToast('🧹 تم مسح اللوكيشن', 'info');
+  }
+
+  function openUber() {
+    if (!state.parsedLocation || !state.parsedLocation.uber) {
+      showToast('⚠️ لازم تحلل اللوكيشن أولاً', 'warning');
+      return;
+    }
+    var url = state.parsedLocation.uber;
+
+    // ✅ نضيف اسم المستلم للرابط
+    var recipientName = document.getElementById('ptRecipientName').value ||
+                        document.getElementById('ptName').value || 'العميل';
+    url += '&dropoff[nickname]=' + encodeURIComponent(recipientName);
+
+    window.open(url, '_blank');
+  }
+
+  function openGoogleMaps() {
+    if (!state.parsedLocation || !state.parsedLocation.lat) {
+      showToast('⚠️ لازم تحلل اللوكيشن أولاً', 'warning');
+      return;
+    }
+    var url = 'https://www.google.com/maps?q=' + state.parsedLocation.lat + ',' + state.parsedLocation.lng;
+    window.open(url, '_blank');
+  }
+
+  function copyCoordinates() {
+    if (!state.parsedLocation || !state.parsedLocation.lat) {
+      showToast('⚠️ لازم تحلل اللوكيشن أولاً', 'warning');
+      return;
+    }
+    var text = state.parsedLocation.lat + ', ' + state.parsedLocation.lng;
+    navigator.clipboard.writeText(text).then(function() {
+      showToast('✅ تم نسخ الإحداثيات', 'success');
+    }).catch(function() {
+      showToast('❌ فشل النسخ', 'error');
+    });
+  }
+
+  // ============================================================
+  // Save
+  // ============================================================
+  async function save() {
+    if (state.mode === 'view') { showToast('⚠️ العنصر في وضع المشاهدة — اضغط تعديل أولاً', 'warning'); return; }
+
+    var btn = document.getElementById('ptSaveBtn');
+    var originalBtnText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳</span><span>جاري الحفظ...</span>';
+
+    try {
+      var id = document.getElementById('ptId').value;
+      var vendcode = document.getElementById('ptVendcode').value;
+      var name = document.getElementById('ptName').value.trim();
+
+      if (!name) { showToast('❌ الاسم مطلوب', 'error'); btn.disabled = false; btn.innerHTML = originalBtnText; return; }
+      if (!id && !vendcode) { showToast('❌ اختر النوع', 'error'); btn.disabled = false; btn.innerHTML = originalBtnText; return; }
+
+      // ✅ تجميع بيانات الشحن (اختياري)
+      var shippingData = {
+        shipping_company: document.getElementById('ptShippingCompany').value.trim(),
+        country: document.getElementById('ptShippingCountry').value.trim(),
+        city: document.getElementById('ptShippingCity').value.trim(),
+        address: document.getElementById('ptShippingAddress').value.trim(),
+        recipient_name: document.getElementById('ptRecipientName').value.trim() || name,
+        recipient_phone: document.getElementById('ptRecipientPhone').value.trim() || document.getElementById('ptPhone').value.trim(),
+        notes: document.getElementById('ptShippingNotes').value.trim(),
+        location_raw: document.getElementById('ptLocationRaw').value.trim(),
+        location_lat: document.getElementById('ptLocationLat').value || null,
+        location_lng: document.getElementById('ptLocationLng').value || null
+      };
+
+      var endpoint = id ? 'updatePartner' : 'addPartner';
+      var payload = {
+        name: name,
+        phone: document.getElementById('ptPhone').value.trim(),
+        addres: document.getElementById('ptAddress').value.trim(),
+        notes: document.getElementById('ptNotes').value.trim(),
+        vendcode: vendcode,
+        shipping: shippingData
+      };
+      if (id) payload.id = id;
+
+      var result = await api(endpoint, payload);
+      if (result.success) {
+        showToast('✅ ' + (result.message || 'تم الحفظ'), 'success');
+        closeModal();
+        loadAll();
+      } else {
+        showToast('❌ ' + (result.error || 'فشل الحفظ'), 'error');
+        btn.disabled = false; btn.innerHTML = originalBtnText;
+      }
+    } catch (e) {
+      console.error('❌ save error:', e);
+      showToast('❌ فشل الحفظ: ' + e.message, 'error');
+      btn.disabled = false; btn.innerHTML = originalBtnText;
+    }
+  }
+
+  // ============================================================
+  // Delete
+  // ============================================================
+  function deleteFromModal() {
+    var id = document.getElementById('ptId').value;
+    if (!id) { showToast('⚠️ لا يوجد عنصر', 'warning'); return; }
+    var name = document.getElementById('ptName').value || '';
+    if (!confirm('⚠️ هل أنت متأكد من حذف "' + name + '"؟')) return;
+    var word = prompt('⚠️ تأكيد نهائي:\n\nاكتب كلمة "DELETE" بالأحرف الكبيرة');
+    if (word !== 'DELETE') { showToast('❌ تم إلغاء الحذف', 'info'); return; }
+    closeModal();
+    remove(id, { skipConfirm: true });
+  }
+
+  async function remove(id, options) {
+    options = options || {};
+    var item = state.allPartners.find(function(p) { return p.id === id; });
+    if (!item) return;
+
+    if (!options.skipConfirm) {
+      if (!confirm('هل أنت متأكد من حذف "' + item.name + '"؟')) return;
+      var word = prompt('⚠️ تأكيد نهائي: اكتب "DELETE"');
+      if (word !== 'DELETE') { showToast('❌ تم إلغاء الحذف', 'info'); return; }
+    }
+
+    var result = await api('deletePartner', { id: id });
+    if (result.success) {
+      showToast('✅ تم الحذف', 'success');
+      closeModal();
+      loadAll();
+    } else {
+      showToast('❌ ' + (result.error || 'فشل الحذف'), 'error');
+    }
+  }
+
+  function refresh() {
+    showToast('🔄 جاري التحديث...', 'info');
+    loadAll();
+  }
+
+  // ============================================================
+  // 📜 Audit
+  // ============================================================
+  function formatDiffValue(val) {
+    if (val === undefined || val === null || val === '' || val === 'null') return '<span class="pt-diff-na">—</span>';
+    var display = String(val);
+    if (display.length > 80) display = display.substring(0, 80) + '...';
+    return escapeHtml(display);
+  }
+
+  function renderDiffTable(oldRow, newRow) {
+    if (!oldRow) oldRow = {};
+    if (!newRow) newRow = {};
+    var allFields = [
+      { key: 'name', label: 'الاسم' },
+      { key: 'phone', label: 'التليفون' },
+      { key: 'addres', label: 'العنوان' },
+      { key: 'notes', label: 'ملاحظات' },
+      { key: 'vendcode', label: 'النوع' }
+    ];
+    var fields = allFields.filter(function(f) {
+      var hasOld = oldRow[f.key] !== undefined && oldRow[f.key] !== null && oldRow[f.key] !== '';
+      var hasNew = newRow[f.key] !== undefined && newRow[f.key] !== null && newRow[f.key] !== '';
+      return hasOld || hasNew;
+    });
+    if (!fields.length) return '<div class="pt-audit-info-box">ℹ️ لا توجد حقول</div>';
+    var h = '<table class="pt-audit-diff-table"><thead><tr><th>الحقل</th><th>قبل</th><th>بعد</th></tr></thead><tbody>';
+    var hasChanges = false;
+    fields.forEach(function(f) {
+      var oldVal = oldRow[f.key], newVal = newRow[f.key];
+
+      if (f.key === 'vendcode') {
+        var oldInfo = oldVal ? (TYPES[String(oldVal)] || null) : null;
+        var newInfo = newVal ? (TYPES[String(newVal)] || null) : null;
+        if (oldInfo) oldVal = oldInfo.icon + ' ' + oldInfo.label;
+        if (newInfo) newVal = newInfo.icon + ' ' + newInfo.label;
+      }
+
+      var oldDisplay = formatDiffValue(oldVal), newDisplay = formatDiffValue(newVal);
+      var isChanged = String(oldVal || '') !== String(newVal || '');
+      var isAdded = (oldVal === undefined || oldVal === null || oldVal === '') && (newVal !== undefined && newVal !== null && newVal !== '');
+      var isRemoved = (newVal === undefined || newVal === null || newVal === '') && (oldVal !== undefined && oldVal !== null && oldVal !== '');
+      if (isChanged || isAdded || isRemoved) hasChanges = true;
+      var rowCls = '', badge = '';
+      if (isAdded) { rowCls = 'diff-added'; badge = '<span class="pt-diff-badge">➕</span>'; }
+      else if (isRemoved) { rowCls = 'diff-removed'; badge = '<span class="pt-diff-badge">➖</span>'; }
+      else if (isChanged) { rowCls = 'diff-changed'; badge = '<span class="pt-diff-badge">✏️</span>'; }
+      h += '<tr class="' + rowCls + '"><td class="pt-audit-diff-field">' + escapeHtml(f.label) + ' ' + badge + '</td><td class="pt-audit-diff-old">' + oldDisplay + '</td><td class="pt-audit-diff-new">' + newDisplay + '</td></tr>';
+    });
+    h += '</tbody></table>';
+    if (!hasChanges) return '<div class="pt-audit-info-box">ℹ️ لا توجد تغييرات</div>';
+    return h;
+  }
+
+  function buildAuditCard(log) {
+    var actionMap = {
+      'create': { label: '🆕 إنشاء', cls: 'action-create' },
+      'update': { label: '✏️ تعديل', cls: 'action-update' },
+      'delete': { label: '🗑️ حذف', cls: 'action-delete' }
+    };
+    var a = actionMap[log.action] || { label: log.action, cls: '' };
+    var h = '<div class="pt-audit-card">';
+    h += '<div class="pt-audit-card-header">';
+    h += '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">';
+    h += '<span class="pt-audit-action">' + a.label + '</span>';
+    if (log.partner_name) h += '<span class="invoice-tag">👤 ' + escapeHtml(log.partner_name) + '</span>';
+    if (log.partner_type_label) h += '<span style="font-size:11px;font-weight:800;">' + (log.partner_type_icon || '') + ' ' + escapeHtml(log.partner_type_label) + '</span>';
+    h += '</div>';
+    h += '<div class="pt-audit-meta">';
+    h += '<span>👤 <span class="user">' + escapeHtml(log.username || 'system') + '</span></span>';
+    h += '<span class="time">🕐 ' + escapeHtml(log.created_at || '—') + '</span>';
+    if (log.ip_address) h += '<span class="ip">🌐 ' + escapeHtml(log.ip_address) + '</span>';
+    h += '</div></div>';
+    h += '<div class="pt-audit-card-body">';
+    if (log.notes) h += '<div class="pt-audit-notes">📝 ' + escapeHtml(log.notes) + '</div>';
+    if (log.action === 'update' && log.old_values && log.new_values) {
+      h += '<div class="pt-audit-diff-section"><div class="pt-audit-diff-title">👤 بيانات الطرف</div>';
+      h += renderDiffTable(log.old_values, log.new_values);
+      h += '</div>';
+    } else if (log.action === 'delete' && log.old_values) {
+      h += '<div style="text-align:center;font-size:12px;padding:10px;background:#f2f2f2;border:1px solid #000;border-radius:4px;font-weight:800;">🗑️ تم حذف الطرف: ' + escapeHtml(log.old_values.name || '—') + '</div>';
+    } else if (log.action === 'create' && log.new_values) {
+      h += '<div style="text-align:center;font-size:12px;padding:8px;background:#f2f2f2;border:1px solid #000;border-radius:4px;font-weight:800;">✅ تم إنشاء الطرف</div>';
+    }
+    h += '</div></div>';
+    return h;
+  }
+
+  async function showAudit() {
+    var overlay = document.getElementById('ptAuditOverlay');
+    var body = document.getElementById('ptAuditBody');
+    var countEl = document.getElementById('ptAuditCount');
+    var filtersEl = document.getElementById('ptAuditFilters');
+
+    var vendcode = state.currentType !== 'all' ? state.currentType : null;
+    var search = state.currentSearch;
+
+    var filtersDesc = [];
+    if (vendcode) {
+      var info = getTypeInfo(vendcode);
+      filtersDesc.push('نوع: ' + info.label);
+    }
+    if (search) filtersDesc.push('بحث: "' + search + '"');
+    filtersEl.textContent = filtersDesc.length ? filtersDesc.join(' | ') : 'بدون فلتر';
+
+    body.innerHTML = '<div class="pt-audit-loading">⏳ جاري تحميل السجل...</div>';
+    countEl.textContent = '...';
+    overlay.classList.add('show');
+
+    var r = await api('getPartnersAudit', {
+      vendcode: vendcode || null,
+      search: search || null
+    });
+
+    if (!r || !r.success) {
+      body.innerHTML = '<div class="pt-audit-loading">❌ فشل: ' + escapeHtml((r && r.error) || '') + '</div>';
+      countEl.textContent = '0';
+      return;
+    }
+
+    var logs = r.data || [];
+    if (!logs.length) {
+      body.innerHTML = '<div class="pt-audit-empty"><div class="icon">📭</div><h4>لا توجد تعديلات</h4><p>لم يتم إجراء أي تعديلات على الأطراف المطابقة</p></div>';
+      countEl.textContent = '0';
+      return;
+    }
+
+    var html = '';
+    logs.forEach(function(log) { html += buildAuditCard(log); });
+    body.innerHTML = html;
+    countEl.textContent = logs.length;
+  }
+
+  function closeAudit(e) {
+    if (e && e.target !== e.currentTarget) return;
+    var overlay = document.getElementById('ptAuditOverlay');
+    if (overlay) overlay.classList.remove('show');
+  }
+
+  // ============================================================
+  // Expose API
+  // ============================================================
+  window.partnersPage = {
+    filterByType: filterByType,
+    filter: filter,
+    clearFilters: clearFilters,
+    openModal: openModal,
+    closeModal: closeModal,
+    edit: edit,
+    view: view,
+    enableEditMode: enableEditMode,
+    deleteFromModal: deleteFromModal,
+    save: save,
+    remove: remove,
+    refresh: refresh,
+    selectType: selectType,
+    loadAll: loadAll,
+    showAudit: showAudit,
+    closeAudit: closeAudit,
+    callPhone: callPhone,
+    openWhatsApp: openWhatsApp,
+    callFromModal: callFromModal,
+    whatsappFromModal: whatsappFromModal,
+    handleCall: handleCall,
+    handleWhatsApp: handleWhatsApp,
+    parseLocation: parseLocation,
+    pasteFromClipboard: pasteFromClipboard,
+    clearLocation: clearLocation,
+    openUber: openUber,
+    openGoogleMaps: openGoogleMaps,
+    copyCoordinates: copyCoordinates
+  };
+
+  // ============================================================
+  // Init
+  // ============================================================
+  function init() {
+    console.log('📞 [Partners] init');
+    updateMainHeader();
+    loadAll();
+
+    var openId = (typeof getOpenInvoiceId === 'function') ? getOpenInvoiceId('partners') : null;
+    if (!openId && sessionStorage.getItem('open_invoice_id') && sessionStorage.getItem('open_invoice_page') === 'partners') {
+      openId = sessionStorage.getItem('open_invoice_id');
+      sessionStorage.removeItem('open_invoice_id');
+      sessionStorage.removeItem('open_invoice_page');
+    }
+    if (openId) setTimeout(function() { view(openId); }, 300);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  document.addEventListener('click', function(e) {
+    if (e.target.id === 'ptModal') closeModal();
+    if (e.target.id === 'ptAuditOverlay') closeAudit();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var auditOverlay = document.getElementById('ptAuditOverlay');
+      if (auditOverlay && auditOverlay.classList.contains('show')) closeAudit();
+    }
+  });
+
+  console.log('✅ صفحة الأطراف جاهزة');
+})();
+</script>
